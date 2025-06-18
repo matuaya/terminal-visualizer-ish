@@ -25,18 +25,17 @@ async function main() {
     ],
   ).run();
 
-  if (select === "skip") {
-    return await playVisualizer(DEFAULT_SAMPLE);
-  }
-
   console.clear();
 
-  let volumeSamples = await runCalibration();
+  let volumeSamples = DEFAULT_SAMPLE;
+  if (select === "calibrate") {
+    const calibrationSamples = await runCalibration();
+    const lowest = calibrationSamples[0];
+    const highest = calibrationSamples[1];
 
-  const lowest = volumeSamples[0];
-  const highest = volumeSamples[1];
-  if (lowest > highest || highest - lowest < 800) {
-    volumeSamples = DEFAULT_SAMPLE;
+    lowest > highest || highest - lowest < 800
+      ? volumeSamples
+      : (volumeSamples = calibrationSamples);
   }
 
   await playVisualizer(volumeSamples);
