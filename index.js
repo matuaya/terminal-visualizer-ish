@@ -39,6 +39,8 @@ async function main() {
   }
 
   await playVisualizer(volumeSamples);
+
+  console.log("Exiting...");
 }
 
 main().catch((error) => {
@@ -46,7 +48,7 @@ main().catch((error) => {
     error &&
     error.message === "PvRecorder failed to read audio data frame."
   ) {
-    console.error("Exiting...");
+    console.error("Sampling was interrupted");
   } else if (error === "") {
     console.error("Prompt cancelled");
   } else {
