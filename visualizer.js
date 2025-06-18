@@ -28,6 +28,8 @@ export async function playVisualizer(calibrationSamples) {
       console.clear();
     }
   }
+
+  cleanupVisualizer();
 }
 
 export function calculateLoudness(frame) {
@@ -63,6 +65,15 @@ function setupVisualizer() {
   hideCursor();
 }
 
+function cleanupVisualizer() {
+  recorder.release();
+  showCursor();
+}
+
 function hideCursor() {
   process.stdout.write("\u001B[?25l");
+}
+
+function showCursor() {
+  process.stdout.write("\u001B[?25h");
 }
