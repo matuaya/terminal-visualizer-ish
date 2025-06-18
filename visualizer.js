@@ -11,7 +11,6 @@ export async function playVisualizer(calibrationSamples) {
   let xPosition = 0;
 
   setupVisualizer();
-  recorder.start();
 
   while (!isInterrupted.status) {
     const frame = await recorder.read();
@@ -62,6 +61,7 @@ function drawBar(xPosition, yPosition, barHeight) {
 
 function setupVisualizer() {
   console.clear();
+  recorder.start();
   hideCursor();
 }
 
