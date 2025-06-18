@@ -33,9 +33,8 @@ export async function playVisualizer(calibrationSamples) {
 export function calculateLoudness(frame) {
   const meanSquare =
     frame.reduce((sum, value) => value * value + sum, 0) / frame.length;
-  const rms = Math.sqrt(meanSquare);
 
-  return rms;
+  return Math.sqrt(meanSquare);
 }
 
 function createBarHeight(calibrationSamples, volume) {
