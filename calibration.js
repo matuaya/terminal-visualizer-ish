@@ -1,7 +1,7 @@
 import { selectPrompt } from "./prompt.js";
 import { isInterrupted } from "./exit-handler.js";
 import { recorder } from "./recorder.js";
-import { calculateRMS } from "./visualizer.js";
+import { calculateLoudness } from "./visualizer.js";
 
 const SAMPLE_FRAMES = 90;
 
@@ -60,8 +60,8 @@ async function collectFrames() {
     }
 
     const frame = await recorder.read();
-    const rms = calculateRMS(frame);
-    frames.push(rms);
+    const volume = calculateLoudness(frame);
+    frames.push(volume);
   }
 
   recorder.stop();

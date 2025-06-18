@@ -15,8 +15,8 @@ export async function playVisualizer(calibrationSamples) {
 
   while (!isInterrupted.status) {
     const frame = await recorder.read();
-    const amplitude = calculateRMS(frame);
-    const barHeight = createBarHeight(calibrationSamples, amplitude);
+    const volume = calculateLoudness(frame);
+    const barHeight = createBarHeight(calibrationSamples, volume);
 
     drawBar(xPosition, yPosition, barHeight);
     xPosition++;
@@ -30,7 +30,7 @@ export async function playVisualizer(calibrationSamples) {
   }
 }
 
-export function calculateRMS(frame) {
+export function calculateLoudness(frame) {
   const meanSquare =
     frame.reduce((sum, value) => value * value + sum, 0) / frame.length;
   const rms = Math.sqrt(meanSquare);
@@ -38,17 +38,17 @@ export function calculateRMS(frame) {
   return rms;
 }
 
-function createBarHeight(calibrationSamples, amplitude) {
+function createBarHeight(calibrationSamples, volume) {
   const lowest = calibrationSamples[0];
   const highest = calibrationSamples[1];
   const intervalValue = (highest - lowest) / (MAXIMUM_BAR_HEIGHT - 2);
 
-  if (amplitude <= lowest) {
+  if (volume <= lowest) {
     return 1;
-  } else if (amplitude > highest) {
+  } else if (volume > highest) {
     return MAXIMUM_BAR_HEIGHT;
   } else {
-    return Math.round((amplitude - lowest) / intervalValue) + 1;
+    return Math.round((volume - lowest) / intervalValue) + 1;
   }
 }
 
