@@ -56,7 +56,7 @@ async function collectFrames() {
   const frames = [];
   for (let i = 0; i <= SAMPLE_FRAMES; i++) {
     if (isInterrupted.status) {
-      recorder.stop();
+      recorder.release();
     }
 
     const frame = await recorder.read();
