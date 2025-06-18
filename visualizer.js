@@ -7,7 +7,7 @@ const MAXIMUM_BAR_HEIGHT = 15;
 export async function playVisualizer(calibrationSamples) {
   const terminalWidth = process.stdout.columns;
   const terminalHeight = process.stdout.rows;
-  let yPosition = process.stdout.rows - 3;
+  const yPosition = process.stdout.rows - 3;
   let xPosition = 0;
 
   setupVisualizer();

@@ -6,7 +6,7 @@ import { calculateRMS } from "./visualizer.js";
 const SAMPLE_FRAMES = 90;
 
 export async function runCalibration() {
-  let volumeSamples = [];
+  const volumeSamples = [];
   const lowSample = await getSample(
     "To collect low-volume samples, press 'Start Sampling' and stay quiet for a few seconds.",
     "low",

@@ -1,6 +1,6 @@
 import { recorder } from "./recorder.js";
 
-export let isInterrupted = { status: false };
+export const isInterrupted = { status: false };
 
 process.on("SIGINT", () => {
   console.log();
