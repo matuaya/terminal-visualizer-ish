@@ -25,12 +25,11 @@ export async function runCalibration() {
 }
 
 async function getSample(instructionMessage, sampleType) {
-  const response = await selectPrompt(instructionMessage, [
+  const volumeLevel = await selectPrompt(instructionMessage, [
     { name: "Start Sampling", value: sampleType },
   ]).run();
-  if (response) {
-    return getAverageVolume(sampleType);
-  }
+
+  return getAverageVolume(volumeLevel);
 }
 
 async function getAverageVolume(volumeLevel) {
