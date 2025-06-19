@@ -1,6 +1,6 @@
 import readline from "readline";
 import { recorder } from "./recorder.js";
-import { isInterrupted } from "./exit-handler.js";
+import { isInterrupted } from "../utils/exit-handler.js";
 
 const MAXIMUM_BAR_HEIGHT = 15;
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { PvRecorder } from "@picovoice/pvrecorder-node";
-import { selectPrompt } from "./prompt.js";
-import { playVisualizer } from "./visualizer.js";
-import { runCalibration } from "./calibration.js";
+import { selectPrompt } from "./utils/prompt.js";
+import { playVisualizer } from "./core/visualizer.js";
+import { runCalibration } from "./core/calibration.js";
 
 const DEFAULT_SAMPLE = [200, 3000];
 
