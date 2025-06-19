@@ -1,5 +1,5 @@
 import { selectPrompt } from "../utils/prompt.js";
-import { isInterrupted } from "../utils/exit-handler.js";
+import { isInterrupted } from "../utils/exit_handler.js";
 import { recorder } from "./recorder.js";
 import { calculateLoudness } from "./visualizer.js";
 
