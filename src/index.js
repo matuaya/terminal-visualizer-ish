@@ -43,10 +43,7 @@ async function main() {
 }
 
 main().catch((error) => {
-  if (
-    error &&
-    error.message === "PvRecorder failed to read audio data frame."
-  ) {
+  if (error?.message === "PvRecorder failed to read audio data frame.") {
     console.error("Sampling was interrupted");
   } else if (error === "") {
     console.error("Prompt cancelled");
