@@ -33,9 +33,8 @@ async function main() {
     const lowest = calibrationSamples[0];
     const highest = calibrationSamples[1];
 
-    lowest > highest || highest - lowest < 800
-      ? volumeSamples
-      : (volumeSamples = calibrationSamples);
+    const invalid = lowest > highest || highest - lowest < 800;
+    volumeSamples = invalid ? volumeSamples : calibrationSamples;
   }
 
   await playVisualizer(volumeSamples);
