@@ -10,25 +10,23 @@ export async function playVisualizer(calibrationSamples) {
   const yPosition = process.stdout.rows - 3;
   let xPosition = 0;
 
-  setupVisualizer();
+  await withVisualizer(async () => {
+    while (!isInterrupted.status) {
+      const frame = await recorder.read();
+      const volume = calculateLoudness(frame);
+      const barHeight = createBarHeight(calibrationSamples, volume);
 
-  while (!isInterrupted.status) {
-    const frame = await recorder.read();
-    const volume = calculateLoudness(frame);
-    const barHeight = createBarHeight(calibrationSamples, volume);
+      drawBar(xPosition, yPosition, barHeight);
+      xPosition++;
 
-    drawBar(xPosition, yPosition, barHeight);
-    xPosition++;
+      readline.cursorTo(process.stdout, 0, terminalHeight);
 
-    readline.cursorTo(process.stdout, 0, terminalHeight);
-
-    if (xPosition > terminalWidth) {
-      xPosition = 0;
-      console.clear();
+      if (xPosition > terminalWidth) {
+        xPosition = 0;
+        console.clear();
+      }
     }
-  }
-
-  cleanupVisualizer();
+  });
 }
 
 export function calculateLoudness(frame) {
@@ -56,6 +54,15 @@ function drawBar(xPosition, yPosition, barHeight) {
   for (let i = 0; i < barHeight; i++) {
     readline.cursorTo(process.stdout, xPosition, yPosition - i);
     process.stdout.write("┃");
+  }
+}
+
+async function withVisualizer(callback) {
+  setupVisualizer();
+  try {
+    await callback();
+  } finally {
+    cleanupVisualizer();
   }
 }
 
