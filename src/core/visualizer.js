@@ -14,7 +14,7 @@ export async function playVisualizer(calibrationSamples) {
     while (!isInterrupted.status) {
       const frame = await recorder.read();
       const volume = calculateLoudness(frame);
-      const barHeight = createBarHeight(calibrationSamples, volume);
+      const barHeight = calculateBarHeight(calibrationSamples, volume);
 
       drawBar(xPosition, yPosition, barHeight);
       xPosition++;
@@ -36,7 +36,7 @@ export function calculateLoudness(frame) {
   return Math.sqrt(meanSquare);
 }
 
-function createBarHeight(calibrationSamples, volume) {
+function calculateBarHeight(calibrationSamples, volume) {
   const { lowest, highest } = calibrationSamples;
   const intervalValue = (highest - lowest) / (MAXIMUM_BAR_HEIGHT - 2);
 
