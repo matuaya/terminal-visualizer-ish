@@ -1,0 +1,85 @@
+import readline from "readline";
+import { recorder } from "./recorder.js";
+import { isInterrupted } from "../utils/exit_handler.js";
+
+const MAXIMUM_BAR_HEIGHT = 15;
+
+export async function playVisualizer(volumeSamples) {
+  const terminalWidth = process.stdout.columns;
+  const terminalHeight = process.stdout.rows;
+  const yPosition = process.stdout.rows - 3;
+  let xPosition = 0;
+
+  await withVisualizer(async () => {
+    while (!isInterrupted.status) {
+      const frame = await recorder.read();
+      const volume = calculateLoudness(frame);
+      const barHeight = calculateBarHeight(volumeSamples, volume);
+
+      drawBar(xPosition, yPosition, barHeight);
+      xPosition++;
+
+      readline.cursorTo(process.stdout, 0, terminalHeight);
+
+      if (xPosition > terminalWidth) {
+        xPosition = 0;
+        console.clear();
+      }
+    }
+  });
+}
+
+export function calculateLoudness(frame) {
+  const meanSquare =
+    frame.reduce((sum, value) => value * value + sum, 0) / frame.length;
+
+  return Math.sqrt(meanSquare);
+}
+
+function calculateBarHeight(volumeSamples, volume) {
+  const { lowest, highest } = volumeSamples;
+  const intervalValue = (highest - lowest) / (MAXIMUM_BAR_HEIGHT - 2);
+
+  if (volume <= lowest) {
+    return 1;
+  } else if (volume > highest) {
+    return MAXIMUM_BAR_HEIGHT;
+  } else {
+    return Math.round((volume - lowest) / intervalValue) + 1;
+  }
+}
+
+function drawBar(xPosition, yPosition, barHeight) {
+  for (let i = 0; i < barHeight; i++) {
+    readline.cursorTo(process.stdout, xPosition, yPosition - i);
+    process.stdout.write("┃");
+  }
+}
+
+async function withVisualizer(callback) {
+  setupVisualizer();
+  try {
+    await callback();
+  } finally {
+    cleanupVisualizer();
+  }
+}
+
+function setupVisualizer() {
+  console.clear();
+  recorder.start();
+  hideCursor();
+}
+
+function cleanupVisualizer() {
+  recorder.release();
+  showCursor();
+}
+
+function hideCursor() {
+  process.stdout.write("\u001B[?25l");
+}
+
+function showCursor() {
+  process.stdout.write("\u001B[?25h");
+}
