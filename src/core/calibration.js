@@ -51,17 +51,19 @@ async function collectFrames() {
   console.log("Collecting samples...");
 
   const frames = [];
-  for (let i = 0; i <= SAMPLE_FRAMES; i++) {
-    if (isInterrupted.status) {
-      recorder.release();
+  try {
+    for (let i = 0; i <= SAMPLE_FRAMES; i++) {
+      if (isInterrupted.status) {
+        recorder.release();
+      }
+
+      const frame = await recorder.read();
+      const volume = calculateLoudness(frame);
+      frames.push(volume);
     }
-
-    const frame = await recorder.read();
-    const volume = calculateLoudness(frame);
-    frames.push(volume);
+  } finally {
+    recorder.stop();
   }
-
-  recorder.stop();
 
   return frames;
 }
