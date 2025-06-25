@@ -4,7 +4,7 @@ import { isInterrupted } from "../utils/exit_handler.js";
 
 const MAXIMUM_BAR_HEIGHT = 15;
 
-export async function playVisualizer(calibrationSamples) {
+export async function playVisualizer(volumeSamples) {
   const terminalWidth = process.stdout.columns;
   const terminalHeight = process.stdout.rows;
   const yPosition = process.stdout.rows - 3;
@@ -14,7 +14,7 @@ export async function playVisualizer(calibrationSamples) {
     while (!isInterrupted.status) {
       const frame = await recorder.read();
       const volume = calculateLoudness(frame);
-      const barHeight = calculateBarHeight(calibrationSamples, volume);
+      const barHeight = calculateBarHeight(volumeSamples, volume);
 
       drawBar(xPosition, yPosition, barHeight);
       xPosition++;
@@ -36,8 +36,8 @@ export function calculateLoudness(frame) {
   return Math.sqrt(meanSquare);
 }
 
-function calculateBarHeight(calibrationSamples, volume) {
-  const { lowest, highest } = calibrationSamples;
+function calculateBarHeight(volumeSamples, volume) {
+  const { lowest, highest } = volumeSamples;
   const intervalValue = (highest - lowest) / (MAXIMUM_BAR_HEIGHT - 2);
 
   if (volume <= lowest) {
