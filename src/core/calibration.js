@@ -6,12 +6,12 @@ import { calculateLoudness } from "./visualizer.js";
 const SAMPLE_FRAMES = 90;
 
 export async function runCalibration() {
-  const volumeSamples = [];
+  const volumeSamples = {};
   const lowSample = await getSample(
     "To collect low-volume samples, press 'Start Sampling' and stay quiet for a few seconds.",
     "low",
   );
-  volumeSamples.push(lowSample);
+  volumeSamples["lowest"] = lowSample;
 
   console.clear();
 
@@ -19,7 +19,7 @@ export async function runCalibration() {
     "To collect high-volume samples, press 'Start Sampling' and speak louder than normal for a few seconds.",
     "high",
   );
-  volumeSamples.push(highSample);
+  volumeSamples["highest"] = highSample;
 
   return volumeSamples;
 }

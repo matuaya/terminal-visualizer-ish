@@ -37,8 +37,7 @@ export function calculateLoudness(frame) {
 }
 
 function createBarHeight(calibrationSamples, volume) {
-  const lowest = calibrationSamples[0];
-  const highest = calibrationSamples[1];
+  const { lowest, highest } = calibrationSamples;
   const intervalValue = (highest - lowest) / (MAXIMUM_BAR_HEIGHT - 2);
 
   if (volume <= lowest) {
