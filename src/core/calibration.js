@@ -36,12 +36,10 @@ async function getAverageVolume(volumeLevel) {
   const frames = await collectFrames();
   const sortedFrames = frames.sort((a, b) => b - a);
 
-  let filteredFrames;
-  if (volumeLevel === "high") {
-    filteredFrames = sortedFrames.slice(0, 30);
-  } else if (volumeLevel === "low") {
-    filteredFrames = sortedFrames.slice(-30);
-  }
+  const filteredFrames =
+    volumeLevel === "high"
+      ? sortedFrames.slice(0, 30)
+      : sortedFrames.slice(-30);
 
   const average =
     filteredFrames.reduce((sum, i) => sum + i, 0) / filteredFrames.length;
