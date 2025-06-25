@@ -17,37 +17,39 @@ async function main() {
 
   console.clear();
 
-  const select = await selectPrompt(
-    "Choose 'Sound Calibration' to set up the visualizer for your mic, or 'Skip' to just start!",
-    [
-      { name: "Sound Calibration", value: "calibrate" },
-      { name: "Skip (Use Defaults)", value: "skip" },
-    ],
-  ).run();
+  try {
+    const select = await selectPrompt(
+      "Choose 'Sound Calibration' to set up the visualizer for your mic, or 'Skip' to just start!",
+      [
+        { name: "Sound Calibration", value: "calibrate" },
+        { name: "Skip (Use Defaults)", value: "skip" },
+      ],
+    ).run();
 
-  console.clear();
+    console.clear();
 
-  let volumeSamples = DEFAULT_SAMPLE;
-  if (select === "calibrate") {
-    const calibrationSamples = await runCalibration();
-    const lowest = calibrationSamples[0];
-    const highest = calibrationSamples[1];
+    let volumeSamples = DEFAULT_SAMPLE;
+    if (select === "calibrate") {
+      const calibrationSamples = await runCalibration();
+      const lowest = calibrationSamples[0];
+      const highest = calibrationSamples[1];
 
-    const invalid = lowest > highest || highest - lowest < 800;
-    volumeSamples = invalid ? volumeSamples : calibrationSamples;
+      const invalid = lowest > highest || highest - lowest < 800;
+      volumeSamples = invalid ? volumeSamples : calibrationSamples;
+    }
+
+    await playVisualizer(volumeSamples);
+  } catch (error) {
+    if (error?.message === "PvRecorder failed to read audio data frame.") {
+      console.error("Sampling was interrupted");
+    } else if (error === "") {
+      console.error("Prompt cancelled");
+    } else {
+      throw error;
+    }
   }
-
-  await playVisualizer(volumeSamples);
 
   console.log("Exiting...");
 }
 
-main().catch((error) => {
-  if (error?.message === "PvRecorder failed to read audio data frame.") {
-    console.error("Sampling was interrupted");
-  } else if (error === "") {
-    console.error("Prompt cancelled");
-  } else {
-    throw error;
-  }
-});
+main();
